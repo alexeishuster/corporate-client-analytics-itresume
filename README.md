@@ -109,11 +109,17 @@ SQL analysis of corporate client engagement, task difficulty, and student perfor
 ## 📂 Project Structure
 sql/
 
-├── 01_mau_analysis.sql -- Monthly active users calculation
-├── 02_difficult_tasks.sql -- Task failure rate analysis
-└── 03_student_performance.sql -- Student segmentation
+─ 01_mau_analysis.sql -- Monthly active users calculation
+─ 02_difficult_tasks.sql -- Task failure rate analysis
+─ 03_student_performance.sql -- Student segmentation
+
 results/
-├── mau_results.csv -- MAU data for visualization
-├── difficult_tasks_results.csv -- Task difficulty metrics
-└── student_performance_results.csv -- Student status breakdown
+
+─ mau_results.csv -- MAU data for visualization
+─ difficult_tasks_results.csv -- Task difficulty metrics
+─ student_performance_results.csv -- Student status breakdown
+
+images/
+
+- metabas dashboard
 
