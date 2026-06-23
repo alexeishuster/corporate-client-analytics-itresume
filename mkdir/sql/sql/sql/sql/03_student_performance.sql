@@ -1,0 +1,40 @@
+-- =====================================================
+-- File: 03_student_performance.sql
+-- Purpose: Segment students by performance status
+-- Input: Users, CodeSubmit, UserEntry tables
+-- Output: Student name, submissions, status
+-- =====================================================
+
+WITH students_stat AS (
+  SELECT  
+    u.id AS user_id,
+    u.username,
+    u.first_name || ' ' || u.last_name AS student_name,
+    COUNT(cs.created_at) AS total_submits,
+    SUM(CASE WHEN cs.is_false = 0 THEN 1 ELSE 0 END) AS successful_submits,
+    MAX(ue.entry_at) AS last_login
+  FROM Users u
+  LEFT JOIN CodeSubmit cs ON u.id = cs.user_id
+  LEFT JOIN UserEntry ue ON u.id = ue.user_id
+  WHERE u.company_id = 1
+  GROUP BY u.id, u.first_name, u.last_name, u.username
+)
+SELECT 
+  student_name,
+  total_submits,
+  successful_submits,
+  last_login::date AS last_login_date,
+  CASE 
+    WHEN last_login::date < CURRENT_DATE - INTERVAL '14 days' THEN 'dropped out'
+    WHEN total_submits > 0 AND (successful_submits::float / total_submits) < 0.3 THEN 'struggling'
+    ELSE 'on track'
+  END AS status
+FROM students_stat
+WHERE total_submits > 0
+ORDER BY 
+  CASE  
+    WHEN last_login < CURRENT_DATE - INTERVAL '14 days' THEN 1
+    WHEN total_submits > 0 AND (successful_submits::float / total_submits) < 0.3 THEN 2
+    ELSE 3 
+  END,
+  total_submits DESC;
